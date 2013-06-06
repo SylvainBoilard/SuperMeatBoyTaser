@@ -1,0 +1,22 @@
+SuperMeatBoyTaser, a quick-and-dirty tool for tool-assisted speedruning in
+Super Meat Boy under GNU/Linux.
+
+Copyright (C) 2013 Sylvain Boilard <boilard@crans.org>
+All rights reserved.
+
+Distributed under the terms of the simplified BSD license.
+
+
+This tool is *really* quick-and-dirty. I swear you’ve never seen such a crappy
+piece of code. This was written to try and find ways to make a TAS tool for
+GNU/Linux.
+
+Currently, you can use it to TAS Super Meat Boy. It only has a basic set of
+features and most notably lacks save states, but cool stuff can already be done
+with it. I plan to implement save states at some point, but for now I have no
+efficient solution. Maybe a clever fork() would do the trick? The best solution
+would be to mark parts of the memory as copy-on-write and manage the copies as
+needed, but the Linux kernel seems to lack direct support for this.
+
+The long term plan is to make a versatile TAS tool for GNU/Linux that would
+work with native games and Wine.
