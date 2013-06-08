@@ -154,7 +154,6 @@ void proceed_commands(void)
             return;
         else
         {
-            unsigned char val;
             char filename_buffer[1024];
             switch (command)
             {
@@ -218,12 +217,6 @@ void proceed_commands(void)
                 break;
 
             case 11:
-                val = !frame_counter;
-                send(socket_fd, &val, sizeof(unsigned char), 0);
-
-                if (frame_counter)
-                    break;
-
                 recv(socket_fd, filename_buffer, 1024, 0);
                 replay_inputs_file = open(filename_buffer, O_RDONLY);
                 if (replay_inputs_file < 0)
@@ -286,7 +279,7 @@ void replay_inputs(void)
     key_states[SDLK_SPACE] = (inputs >> 4) & 0x1;
     key_states[SDLK_LSHIFT] = (inputs >> 5) & 0x1;
 
-    if (max_inputs_to_replay == frame_counter + 1)
+    if (!--max_inputs_to_replay)
     {
         close(replay_inputs_file);
         replaying = 0;

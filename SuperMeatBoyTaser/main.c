@@ -147,13 +147,6 @@ int proceed_command(unsigned int command, int socket_fd)
         break;
 
     case 11:
-        recv(socket_fd, &cval, sizeof(unsigned char), 0);
-        if (!cval)
-        {
-            printf("libTAS refused to load inputs (has a frame already passed?).\n");
-            break;
-        }
-
         printf("Enter filename from which to load inputs: ");
         scanf("%s", filename_buffer);
         send(socket_fd, filename_buffer, 1024, 0);
@@ -164,8 +157,6 @@ int proceed_command(unsigned int command, int socket_fd)
             keys[i] = cval & 0x1;
             cval >>= 1;
         }
-
-        break;
 
     default:;
     }
