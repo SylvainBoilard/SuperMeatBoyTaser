@@ -198,14 +198,22 @@ void proceed_commands(void)
 
             case 10:
                 recv(socket_fd, filename_buffer, 1024, 0);
+                unsigned long first_frame;
+                recv(socket_fd, &first_frame, sizeof(unsigned long), 0);
                 int save_inputs_file = open(filename_buffer, O_WRONLY | O_CREAT | O_TRUNC, 0644);
                 if (save_inputs_file < 0)
                 {
                     log_err("Couldn’t open inputs file.");
                     break;
                 }
+                if (first_frame >= frame_counter)
+                {
+                    log_err("Selected first frame deosn’t exist yet.");
+                    close(save_inputs_file);
+                    break;
+                }
                 log_err("Saving inputs...");
-                if (write(save_inputs_file, recorded_inputs, frame_counter) < 0)
+                if (write(save_inputs_file, recorded_inputs + first_frame, frame_counter - first_frame) < 0)
                 {
                     log_err("Couldn’t save inputs.");
                     close(save_inputs_file);

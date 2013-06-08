@@ -94,8 +94,6 @@ int proceed_command(unsigned int command, int socket_fd)
 
     send(socket_fd, &command, sizeof(unsigned int), 0);
 
-    unsigned int val = 0;
-    unsigned char cval;
     char filename_buffer[1024];
 
     switch (command)
@@ -129,33 +127,42 @@ int proceed_command(unsigned int command, int socket_fd)
         break;
 
     case 9:
+        speed_divisor = 0;
         do
         {
             printf("Enter non-null speed divisor factor: ");
-            scanf("%u", &val);
+            scanf("%u", &speed_divisor);
         }
-        while (!val);
+        while (!speed_divisor);
 
-        send(socket_fd, &val, sizeof(unsigned int), 0);
-        speed_divisor = val;
+        send(socket_fd, &speed_divisor, sizeof(unsigned int), 0);
         break;
 
     case 10:
         printf("Enter filename to save inputs in: ");
         scanf("%s", filename_buffer);
         send(socket_fd, filename_buffer, 1024, 0);
+
+        unsigned long first_frame = 0;
+        do
+            printf("Enter first frame to record: ");
+        while (!scanf("%lu", &first_frame));
+
+        send(socket_fd, &first_frame, sizeof(unsigned long), 0);
         break;
 
     case 11:
         printf("Enter filename from which to load inputs: ");
         scanf("%s", filename_buffer);
         send(socket_fd, filename_buffer, 1024, 0);
-        recv(socket_fd, &cval, sizeof(unsigned char), 0);
+
+        unsigned char latest_inputs;
+        recv(socket_fd, &latest_inputs, sizeof(unsigned char), 0);
 
         for (unsigned int i = 0; i < KEYS_NUMBER; ++i)
         {
-            keys[i] = cval & 0x1;
-            cval >>= 1;
+            keys[i] = latest_inputs & 0x1;
+            latest_inputs >>= 1;
         }
 
     default:;
