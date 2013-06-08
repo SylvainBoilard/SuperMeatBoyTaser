@@ -156,13 +156,21 @@ int proceed_command(unsigned int command, int socket_fd)
         scanf("%s", filename_buffer);
         send(socket_fd, filename_buffer, 1024, 0);
 
-        unsigned char latest_inputs;
-        recv(socket_fd, &latest_inputs, sizeof(unsigned char), 0);
+        /* Check if loading can be done. */
+        unsigned char answer;
+        recv(socket_fd, &answer, sizeof(unsigned char), 0);
+        if (!answer)
+        {
+            printf("libTAS couldn’t load inputs.\n");
+            break;
+        }
 
+        /* Update inputs. */
+        recv(socket_fd, &answer, sizeof(unsigned char), 0);
         for (unsigned int i = 0; i < KEYS_NUMBER; ++i)
         {
-            keys[i] = latest_inputs & 0x1;
-            latest_inputs >>= 1;
+            keys[i] = answer & 0x1;
+            answer >>= 1;
         }
 
     default:;

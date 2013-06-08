@@ -227,11 +227,11 @@ void proceed_commands(void)
             case 11:
                 recv(socket_fd, filename_buffer, 1024, 0);
                 replay_inputs_file = open(filename_buffer, O_RDONLY);
-                if (replay_inputs_file < 0)
-                {
-                    log_err("Couldn’t open inputs file.");
+                unsigned char answer = replay_inputs_file >= 0;
+                send(socket_fd, &answer, sizeof(unsigned char), 0);
+                if (!answer)
                     break;
-                }
+
                 log_err("Input file opened, replaying...");
 
                 max_inputs_to_replay = lseek(replay_inputs_file, 0, SEEK_END);
