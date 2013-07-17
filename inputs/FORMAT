@@ -1,0 +1,11 @@
+Each byte represents the inputs enabled during a frame. The bits in each byte
+corresponds, from low order bit to high order bit:
+
+1 - UP
+2 - LEFT
+3 - DOWN
+4 - RIGHT
+5 - SPACE
+6 - LEFT SHIFT
+7 - <Reserved for ESCAPE>
+8 - <None>
